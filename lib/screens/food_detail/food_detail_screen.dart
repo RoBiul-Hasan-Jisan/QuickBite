@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../models/food_item.dart';
 import '../../state/cart_model.dart';
+import '../../state/favorites_model.dart';
 import '../../theme/app_theme.dart';
+import '../../utils/cart_helpers.dart';
+import '../../widgets/dish_thumbnail.dart';
 import '../../widgets/primary_button.dart';
-import '../cart/cart_screen.dart';
 
 class FoodDetailScreen extends StatefulWidget {
   final FoodItem item;
@@ -28,6 +30,7 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> {
   Widget build(BuildContext context) {
     final item = widget.item;
     final cart = CartScope.of(context);
+    final favorites = FavoritesScope.of(context);
 
     return Scaffold(
       body: CustomScrollView(
@@ -46,16 +49,22 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> {
             actions: [
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: _RoundIconButton(
-                  icon: Icons.favorite_border_rounded,
-                  onTap: () {},
+                child: AnimatedBuilder(
+                  animation: favorites,
+                  builder: (context, _) => _RoundIconButton(
+                    icon: favorites.isDishFavorite(item.id)
+                        ? Icons.favorite_rounded
+                        : Icons.favorite_border_rounded,
+                    iconColor: favorites.isDishFavorite(item.id) ? AppColors.danger : null,
+                    onTap: () => favorites.toggleDish(item.id),
+                  ),
                 ),
               ),
             ],
             flexibleSpace: FlexibleSpaceBar(
               background: Hero(
                 tag: item.id,
-                child: Image.asset(item.image, fit: BoxFit.cover),
+                child: DishThumbnail(item: item),
               ),
             ),
           ),
@@ -175,11 +184,9 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> {
             label:
                 'Add to cart · \$${(item.price * _quantity).toStringAsFixed(2)}',
             icon: Icons.shopping_bag_outlined,
-            onPressed: () {
-              cart.add(item, quantity: _quantity);
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const CartScreen()),
-              );
+            onPressed: () async {
+              await addToCartSafely(context, cart, item, quantity: _quantity);
+              if (context.mounted) Navigator.of(context).pop();
             },
           ),
         ),
@@ -190,9 +197,10 @@ class _FoodDetailScreenState extends State<FoodDetailScreen> {
 
 class _RoundIconButton extends StatelessWidget {
   final IconData icon;
+  final Color? iconColor;
   final VoidCallback onTap;
 
-  const _RoundIconButton({required this.icon, required this.onTap});
+  const _RoundIconButton({required this.icon, this.iconColor, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +212,7 @@ class _RoundIconButton extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Icon(icon, size: 18, color: AppColors.dark),
+          child: Icon(icon, size: 18, color: iconColor ?? AppColors.dark),
         ),
       ),
     );

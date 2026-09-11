@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import '../../models/food_item.dart';
 import '../../state/cart_model.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/dish_thumbnail.dart';
 import '../../widgets/primary_button.dart';
-import '../tracking/order_tracking_screen.dart';
+import '../checkout/checkout_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -78,11 +79,10 @@ class _CartLineTile extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(AppRadius.sm),
-            child: Image.asset(
-              line.item.image,
+            child: SizedBox(
               width: 72,
               height: 72,
-              fit: BoxFit.cover,
+              child: DishThumbnail(item: line.item, borderRadius: AppRadius.sm),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
@@ -192,7 +192,7 @@ class _CheckoutSummary extends StatelessWidget {
               icon: Icons.arrow_forward_rounded,
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const OrderTrackingScreen()),
+                  MaterialPageRoute(builder: (_) => const CheckoutScreen()),
                 );
               },
             ),

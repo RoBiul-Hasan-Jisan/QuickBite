@@ -1,9 +1,10 @@
 class FoodItem {
   final String id;
+  final String restaurantId;
   final String name;
   final String description;
   final double price;
-  final String image;
+  final String? image;
   final double rating;
   final int prepTimeMinutes;
   final String category;
@@ -11,10 +12,11 @@ class FoodItem {
 
   const FoodItem({
     required this.id,
+    required this.restaurantId,
     required this.name,
     required this.description,
     required this.price,
-    required this.image,
+    this.image,
     required this.rating,
     required this.prepTimeMinutes,
     required this.category,

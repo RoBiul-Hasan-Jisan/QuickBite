@@ -110,3 +110,51 @@ class AppSpacing {
   static const double lg = 24;
   static const double xl = 32;
 }
+
+/// Deterministic decorative gradients used behind restaurant covers and
+/// dish thumbnails that don't have a real bundled photo, keyed by a
+/// category/cuisine string so the same dish/restaurant always renders the
+/// same way.
+class AppPalette {
+  AppPalette._();
+
+  static const List<List<Color>> _gradients = [
+    [Color(0xFFFFB74D), Color(0xFFF57C00)], // amber
+    [Color(0xFFEF5350), Color(0xFFC62828)], // red
+    [Color(0xFF66BB6A), Color(0xFF2E7D32)], // green
+    [Color(0xFFEC407A), Color(0xFFAD1457)], // pink
+    [Color(0xFF42A5F5), Color(0xFF1565C0)], // blue
+    [Color(0xFFAB47BC), Color(0xFF6A1B9A)], // purple
+  ];
+
+  static List<Color> gradientFor(String key) {
+    final index = key.codeUnits.fold<int>(0, (a, b) => a + b) % _gradients.length;
+    return _gradients[index];
+  }
+
+  static IconData iconForCategory(String category) {
+    switch (category) {
+      case 'Burgers':
+      case 'Mains':
+        return Icons.lunch_dining_rounded;
+      case 'Pizza':
+        return Icons.local_pizza_rounded;
+      case 'Salads':
+      case 'Healthy':
+        return Icons.eco_rounded;
+      case 'Desserts':
+        return Icons.icecream_rounded;
+      case 'Drinks':
+        return Icons.local_bar_rounded;
+      case 'Sides':
+        return Icons.tapas_rounded;
+      case 'Asian':
+      case 'Japanese':
+        return Icons.ramen_dining_rounded;
+      case 'Popular':
+        return Icons.local_fire_department_rounded;
+      default:
+        return Icons.restaurant_rounded;
+    }
+  }
+}

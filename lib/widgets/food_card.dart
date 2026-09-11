@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/food_item.dart';
 import '../theme/app_theme.dart';
+import 'dish_thumbnail.dart';
 
 class FoodCard extends StatelessWidget {
   final FoodItem item;
@@ -42,7 +43,7 @@ class FoodCard extends StatelessWidget {
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(AppRadius.lg),
                       ),
-                      child: Image.asset(item.image, fit: BoxFit.cover),
+                      child: DishThumbnail(item: item),
                     ),
                   ),
                   if (item.tags.isNotEmpty)

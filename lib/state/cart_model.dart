@@ -18,6 +18,12 @@ class CartModel extends ChangeNotifier {
 
   double get total => _lines.isEmpty ? 0 : subtotal + deliveryFee;
 
+  /// The restaurant the current cart belongs to, or null when empty.
+  String? get restaurantId => _lines.isEmpty ? null : _lines.first.item.restaurantId;
+
+  /// Whether [item] can be added without mixing restaurants in one cart.
+  bool canAdd(FoodItem item) => _lines.isEmpty || restaurantId == item.restaurantId;
+
   void add(FoodItem item, {int quantity = 1}) {
     final existingIndex = _lines.indexWhere((l) => l.item.id == item.id);
     if (existingIndex >= 0) {

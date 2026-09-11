@@ -4,7 +4,8 @@ import '../../theme/app_assets.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/social_icon_button.dart';
-import '../home/home_screen.dart';
+import '../main/main_shell.dart';
+import 'signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _continue() {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const HomeScreen()),
+      MaterialPageRoute(builder: (_) => const MainShell()),
       (route) => false,
     );
   }
@@ -140,7 +141,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(color: AppColors.textBody),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const SignupScreen()),
+                    ),
                     child: const Text(
                       'Sign up',
                       style: TextStyle(
